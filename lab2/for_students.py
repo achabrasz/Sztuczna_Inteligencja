@@ -1,6 +1,7 @@
 from itertools import compress
 import random
 import time
+import numpy as np
 import matplotlib.pyplot as plt
 
 from data import *
@@ -24,10 +25,24 @@ def population_best(items, knapsack_max_capacity, population):
             best_individual_fitness = individual_fitness
     return best_individual, best_individual_fitness
 
+def rand_selection(sorted_population, weighted_chance, n_selection):
+    sel = 0
+    sorted_population2 = []
+    for i in range(0, len(weighted_chance)):
+        rand = np.random.uniform(0, 0.02)
+        if rand < weighted_chance[i]:
+            sel += 1
+            sorted_population2.append(sorted_population[i])
+        if sel == n_selection:
+            return sorted_population2
+
+
 def selection(items, knapsack_max_capacity, population, n_selection):
     population_fitness = [fitness(items, knapsack_max_capacity, individual) for individual in population]
     sorted_population = [popul for fit, popul in sorted(zip(population_fitness, population), reverse=True)]
-    return sorted_population[:n_selection]
+    weighted_chance = [1/(i+1) for i in range(0, len(sorted_population))]
+    #return sorted_population[:n_selection]
+    return rand_selection(sorted_population, weighted_chance, n_selection)
 
 def crossover(parent1, parent2):
     crossover_point = random.randint(1, len(parent1) - 1)
