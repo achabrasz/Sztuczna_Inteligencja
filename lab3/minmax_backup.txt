@@ -1,0 +1,49 @@
+bestValue = -float('inf')
+                for col in range(0, connect4.width):
+                    count = 0
+                    for row in range(0, connect4.height):
+                        if connect4.board[row][col] == self.my_token:
+                            count += 2
+                        elif connect4.board[row][col] == '_':
+                            count +=1
+                        else:
+                            count = 0
+                    if count > bestValue:
+                        bestValue = count
+                for row in range(0, connect4.height):
+                    count = 0
+                    for col in range(0, connect4.width):
+                        if connect4.board[row][col] == self.my_token:
+                            count += 2
+                        elif connect4.board[row][col] == '_':
+                            count +=1
+                        else:
+                            count = 0
+                    if count > bestValue:
+                        bestValue = count
+                for row in range(0, connect4.height):
+                    for col in range(0, connect4.width):
+                        count = 0
+                        for i in range(0, 4):
+                            if row + i < connect4.height and col + i < connect4.width:
+                                if connect4.board[row + i][col + i] == self.my_token:
+                                    count += 2
+                                elif connect4.board[row + i][col + i] == '_':
+                                    count += 1
+                                else:
+                                    count = 0
+                        if count > bestValue:
+                            bestValue = count
+                for row in range(0, connect4.height):
+                    for col in range(0, connect4.width):
+                        count = 0
+                        for i in range(0, 4):
+                            if row + i < connect4.height and col - i >= 0:
+                                if connect4.board[row + i][col - i] == self.my_token:
+                                    count += 2
+                                elif connect4.board[row + i][col - i] == '_':
+                                    count += 1
+                                else:
+                                    count = 0
+                        if count > bestValue:
+                            bestValue = count

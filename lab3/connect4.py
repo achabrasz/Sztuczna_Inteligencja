@@ -28,6 +28,15 @@ class Connect4:
         self.game_over = self._check_game_over()
         self.who_moves = 'o' if self.who_moves == 'x' else 'x'
 
+    def undo_move(self, n_column):
+        for row in range(0, self.height):
+            if self.board[row][n_column] != '_':
+                self.board[row][n_column] = '_'
+                self.who_moves = 'o' if self.who_moves == 'x' else 'x'
+                self.game_over = False
+                return
+        raise GameplayException('No token to undo in column {}'.format(n_column))
+
     def center_column(self):
         return [self.board[n_row][self.width//2] for n_row in range(self.height)]
 
