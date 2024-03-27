@@ -4,6 +4,7 @@ import random
 class MinMaxAgent:
     def __init__(self, token, depth=2):
         self.my_token = token
+        self.enemy_token = 'o' if token == 'x' else 'x'
         self.depth = depth
 
     def minimax(self, connect4, depth, maximizingPlayer=True):
@@ -17,7 +18,7 @@ class MinMaxAgent:
                 connect4.drop_token(move)
                 eval, _ = self.minimax(connect4, depth - 1, False)
                 connect4.undo_move(move)
-                if eval > maxEval:
+                if eval is not None and eval > maxEval:
                     maxEval = eval
                     bestMove = move
             return maxEval, bestMove
@@ -28,7 +29,7 @@ class MinMaxAgent:
                 connect4.drop_token(move)
                 eval, _ = self.minimax(connect4, depth - 1, True)
                 connect4.undo_move(move)
-                if eval < minEval:
+                if eval is not None and eval < minEval:
                     minEval = eval
                     bestMove = move
             return minEval, bestMove
@@ -44,59 +45,31 @@ class MinMaxAgent:
     def evaluate(self, connect4):
         if connect4.game_over:
             if connect4.wins == self.my_token:
-                return float('inf')
+                return 160
             elif connect4.wins is not None:
-                return -float('inf')
-            else:
-                bestValue = -float('inf')
-                for col in range (connect4.width, 0, -1):
-                    count = 0
-                    for row in range (connect4.height, 0, -1):
-                        if connect4.board[row][col] == self.my_token:
-                            count += 2
-                        elif connect4.board[row][col] == '_':
-                            count += 1
-                        else:
-                            count = 0
-                    if count > bestValue:
-                        bestValue = count
-                for row in range (connect4.height, 0, -1):
-                    count = 0
-                    for col in range (connect4.width, 0, -1):
-                        if connect4.board[row][col] == self.my_token:
-                            count += 2
-                        elif connect4.board[row][col] == '_':
-                            count += 1
-                        else:
-                            count = 0
-                    if count > bestValue:
-                        bestValue = count
-                for row in range (connect4.height, 0, -1):
-                    for col in range (connect4.width, 0, -1):
-                        count = 0
-                        for i in range (4):
-                            if row - i >= 0 and col - i >= 0:
-                                if connect4.board[row - i][col - i] == self.my_token:
-                                    count += 2
-                                elif connect4.board[row - i][col - i] == '_':
-                                    count += 1
-                                else:
-                                    count = 0
-                        if count > bestValue:
-                            bestValue = count
-                for row in range (connect4.height, 0, -1):
-                    for col in range (connect4.width, 0, -1):
-                        count = 0
-                        for i in range (4):
-                            if row - i >= 0 and col + i < connect4.width:
-                                if connect4.board[row - i][col + i] == self.my_token:
-                                    count += 2
-                                elif connect4.board[row - i][col + i] == '_':
-                                    count += 1
-                                else:
-                                    count = 0
-                        if count > bestValue:
-                            bestValue = count
-                return bestValue
+                return -160
         else:
-            return 0
+            bestValue = 0
+            for four in connect4.iter_fours():
+                count_mine = 0
+                count_enemy = 0
+                count_empty = 0
+                for token in four:
+                    if token == self.my_token:
+                        count_mine += 1
+                    elif token == '_':
+                        count_empty += 1
+                    else:
+                        count_enemy += 1
+                    bestValue += count_mine - count_enemy
+                    if four[0] == self.enemy_token:
+                        bestValue -= 1
+                    if four[0] == self.my_token:
+                        bestValue += 1
+                    if four[3] == self.enemy_token:
+                        bestValue -= 1
+                    if four[3] == self.my_token:
+                        bestValue += 1
+            if len(list(connect4.iter_fours())) == 0:
+                return bestValue
+            return bestValue/len(list(connect4.iter_fours()))
