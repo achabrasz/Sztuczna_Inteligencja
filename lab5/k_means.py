@@ -14,7 +14,9 @@ def initialize_centroids_kmeans_pp(data, k):
         for point in data:
             distances.append(np.max([np.sqrt(np.sum(abs(point - centroid)**2)) for centroid in centroids]))
         distances = np.array(distances)
+        probabilities = distances / np.sum(distances)
         new_centroid = data[np.argmax(distances)]
+        #new_centroid = data[np.random.choice(data.shape[0], p=probabilities)]
         centroids.append(new_centroid)
 
     return np.array(centroids)
@@ -40,6 +42,10 @@ def mean_intra_distance(data, assignments, centroids):
     centroids = np.array(centroids)
     return np.sqrt(np.sum((data - centroids[assignments, :])**2))
 
+def min_intra_distance(data, assignments, centroids):
+    centroids = np.array(centroids)
+    return np.min(np.sqrt(np.sum((data - centroids[assignments, :])**2, axis=1)))
+
 def k_means(data, num_centroids, kmeansplusplus= False):
     # centroids initizalization
     if kmeansplusplus:
@@ -58,5 +64,6 @@ def k_means(data, num_centroids, kmeansplusplus= False):
         else:
             assignments = new_assignments
 
-    return new_assignments, centroids, mean_intra_distance(data, new_assignments, centroids)         
+    return new_assignments, centroids, mean_intra_distance(data, new_assignments, centroids)
+    #return new_assignments, centroids, min_intra_distance(data, new_assignments, centroids)
 
