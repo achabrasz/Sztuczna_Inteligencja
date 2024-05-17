@@ -107,8 +107,8 @@ def zad2_two_layer_net(student_id):
     model.hidden_layer.W[:, 0] = [12, -8]      # wagi neuronu h1
     model.hidden_layer.W[:, 1] = [-4, 3]      # wagi neuronu h2
     model.hidden_layer.b[:] = [2, 2]         # biasy neuronów h1 i h2
-    model.output_layer.W[:, 0] = [-2, 3]      # wagi neuronu wyjściowego
-    model.output_layer.b[:] = [-2]         # bias neuronu wyjściowego
+    model.output_layer.W[:, 0] = [2, 3]      # wagi neuronu wyjściowego
+    model.output_layer.b[:] = [-3]         # bias neuronu wyjściowego
 
     # działanie i ocena modelu
     y_pred = model.forward(x)
