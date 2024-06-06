@@ -9,9 +9,9 @@ import datetime
 
 if __name__ == '__main__':
 
-    agent = 'manual'            # 'q_learning' or 'manual'
+    agent = 'q_learning'            # 'q_learning' or 'manual'
 
-    render = True
+    render = False
     mode = 'train'                  # 'train' or 'test'
 
     env = FrozenLake()
@@ -52,4 +52,4 @@ if __name__ == '__main__':
     print(f"Mode: {mode}")
 
     main_pygame(env, agent, save_path=save_path, render=render,
-                num_episodes=5000, test_mode=(mode == 'train'))
+                num_episodes=5000, test_mode=(mode == 'test'))
